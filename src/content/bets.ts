@@ -272,20 +272,110 @@ export const BETS: Bet[] = [
     index: 2,
     title: 'Agent Onboarding Copilot',
     summary:
-      'Where the days actually go between a signed agent and a first submitted case — and which of them a model can remove.',
-    status: 'scoped',
+      'Where the days actually go between a signed agent and a first submitted case — and which of them a model can remove. The answer is almost none of them.',
+    status: 'shipped',
     problem:
       'An agent onboarding workflow that takes days and involves too many manual handoffs. What if it took hours?',
     problemAttribution: 'Named in the role brief',
     hypothesis:
-      'The obvious build is a model that reads the licensing paperwork. I think that build is close to worthless, and the interesting version of this bet is proving it. The bottleneck is not parsing — it is waiting: state DOI verification, a background vendor, AML certification, E&O, and a per-carrier appointment queue that no model shortens. The falsifiable claim is that document extraction moves total elapsed time by under 10%, and that the real lever is catching a defective packet before it enters a carrier queue, because that defect costs a full external round trip rather than twenty minutes.',
-    killCriterion:
-      'Build the cycle-time model first, from a cohort with per-step touch time and wait time separated. If extraction accounts for under 10% of total elapsed time, the "AI reads the documents and onboarding takes hours" framing is dead, and the bet narrows to a deterministic completeness check at submission plus an ownership queue — neither of which is a model. Registered before building so the number cannot be reinterpreted afterwards.',
-    verdict: 'pending',
+      'The obvious build is a model that reads the licensing paperwork. I thought that build was close to worthless and that the interesting version of this bet was proving it. The claim: the bottleneck is not parsing but waiting — state licence verification, a background vendor, and a per-carrier appointment queue that no model shortens. Extraction moves total elapsed time by under 10%, and the real lever is catching a defective packet before it enters a carrier queue.',
+    built: [
+      'A twelve-agent synthetic cohort with per-step touch time and wait time kept separate — the instrument the whole bet turns on, built before any model call',
+      'A critical-path model, because a background check and a licence lookup run concurrently and summing both overstates the timeline badly',
+      'A deterministic gap engine checking every packet against each target carrier’s requirements, with no model in it at all',
+      'Vision extraction with per-field provenance, every field nullable, and excerpts verified against the document’s own text layer',
+      'A negative control proving the extraction scorer can fail',
+    ],
+    metrics: [
+      {
+        name: 'Extraction’s share of elapsed onboarding time',
+        value: '0.1%',
+        detail: 'against a 10% kill threshold registered before the build',
+        source: 'eval_run',
+        weakest: true,
+      },
+      {
+        name: 'Time in external queues (carrier / state / vendor)',
+        value: '93.9%',
+        detail: 'of a 15.2-day mean, along the critical path',
+        source: 'eval_run',
+      },
+      {
+        name: 'Time with someone actively working',
+        value: '0.3%',
+        detail: '1.0h of 365.6h — the only part extraction can touch',
+        source: 'eval_run',
+      },
+      {
+        name: 'Rule engine vs extraction',
+        value: '22× more',
+        detail: 'elapsed time removed by catching defects before a carrier queue',
+        source: 'eval_run',
+      },
+      {
+        name: 'Gap engine precision / recall',
+        value: '100% / 100%',
+        detail: '8 planted defects, 12 agents, variance 0.00 (deterministic)',
+        source: 'eval_run',
+      },
+      {
+        name: 'Extraction field accuracy',
+        value: '100%',
+        detail: '96 field values, 0 confident-wrong — a ceiling on clean PDFs, not a forecast',
+        source: 'eval_run',
+      },
+    ],
+    cost: {
+      hours: 'Not instrumented',
+      api: '$0.39 total',
+      note:
+        'The two components that produced the finding — the cycle-time model and the gap engine — cost nothing to run, because neither calls a model. That is the economic version of the same point: the cheapest thing in the project is the thing that decided it.',
+    },
+    roi: [
+      {
+        lever:
+          'Rework prevention — a packet defect caught at submission instead of by a carrier, which costs a full round trip through their queue rather than minutes.',
+        formula:
+          'agents onboarded per year × share whose packet bounces × days lost per bounce × cost of a day of delayed activation',
+        inputs: [
+          {
+            name: 'Elapsed time lost to one bounced packet',
+            value: '96h (19% of that agent’s total)',
+            basis: 'measured',
+            note: 'Measured in the cohort model for the agent carrying a legal-name mismatch.',
+          },
+          {
+            name: 'Share of packets that bounce',
+            value: 'Business input',
+            basis: 'guess',
+            note: 'One agent in twelve here is my assumption, not an observation. This is the number that sizes the whole lever and it should come from contracting data.',
+          },
+          {
+            name: 'Cost of a day of delayed activation',
+            value: 'Business input',
+            basis: 'guess',
+          },
+        ],
+        caveat:
+          'This is worth nothing if packets rarely bounce, or if the common bounce reason is something a completeness check cannot see — a background result, say, rather than a data defect. Both are checkable against contracting records before another line is written.',
+      },
+    ],
+    verdict: 'de_scope',
     verdictRationale:
-      'No verdict yet, because no evidence yet. The kill criterion above is registered and the instrument that tests it — the touch-time versus wait-time split — is the first thing that gets built, before any model is called.',
+      'The kill criterion fired, and not narrowly: extraction removes 0.1% of elapsed time against a 10% threshold, and it still fires with carrier queues cut to a quarter. Someone actively working is 0.3% of a 15.2-day onboarding, so no accuracy figure makes “days into hours” available. The framing dies. What survives is in the same data — the deterministic completeness check removes 22× more elapsed time than extraction and has no model in it, and a nudge queue recovers idle time that belongs to nobody. Extraction was built anyway and is trustworthy on its own terms (100% on 96 field values, zero confident-wrong), which answers a different question: it can accelerate review, not compress the timeline.',
     wouldChangeIt:
-      'The cycle-time split. A second, genuinely open question sits behind it: if extraction gets an NPN wrong, does it return a null or a confident wrong value? A null is cheap — a human reviews it. A confident wrong value posts to a carrier system. The same accuracy number means opposite things depending on which way it fails, so the eval measures the ratio rather than the accuracy.',
+      'The real touch-versus-wait split from the workflow system, and the real rework rate from contracting data. The conclusion survives large errors in the assumed durations, but it is still a model, and those two numbers are what would move it. Nothing about extraction accuracy would — that is the point of the finding.',
+    links: [
+      {
+        label: 'Source',
+        href: 'https://github.com/scottdelia/onboarding-copilot',
+        primary: true,
+      },
+      {
+        label: 'Findings write-up',
+        href: 'https://github.com/scottdelia/onboarding-copilot/blob/main/docs/FINDINGS.md',
+      },
+    ],
   },
 
   {
