@@ -367,9 +367,13 @@ export const BETS: Bet[] = [
       'The real touch-versus-wait split from the workflow system, and the real rework rate from contracting data. The conclusion survives large errors in the assumed durations, but it is still a model, and those two numbers are what would move it. Nothing about extraction accuracy would — that is the point of the finding.',
     links: [
       {
+        label: 'Live demo',
+        href: 'https://scottdelia.github.io/onboarding-copilot/',
+        primary: true,
+      },
+      {
         label: 'Source',
         href: 'https://github.com/scottdelia/onboarding-copilot',
-        primary: true,
       },
       {
         label: 'Findings write-up',
