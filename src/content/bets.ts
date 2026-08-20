@@ -114,7 +114,11 @@ export const THESIS = {
 export const OPERATING_NOTES = [
   {
     title: 'A kill criterion before the build, not after',
-    body: 'Each unbuilt bet carries the result that ends it, written down in advance. A criterion set afterwards is an opinion; set beforehand it is a decision, and it stops a disappointing number being reinterpreted as an encouraging one.',
+    body: 'Every bet here carried the result that would end it, written down before the work started. A criterion set afterwards is an opinion; set beforehand it is a decision, and it stops a disappointing number being reinterpreted as an encouraging one. Two of the three were decided by the criterion they registered.',
+  },
+  {
+    title: 'A criterion that holds is not a clean bill of health',
+    body: 'Bet 3 passed the test it registered and was de-scoped anyway, by a second check that was not the headline: a dimension planted with zero weight came back ranked as a driver. Pre-registration stops you moving the goalposts. It does not tell you whether you chose the right posts, and the only defence against that is planting a result you already know the answer to.',
   },
   {
     title: 'Every number says where it came from',
@@ -387,8 +391,8 @@ export const BETS: Bet[] = [
     index: 3,
     title: 'Call Coaching',
     summary:
-      'Whether an LLM rubric over call transcripts measures selling skill, or measures knowing how the call ended.',
-    status: 'scoped',
+      'Whether an LLM rubric over call transcripts measures selling skill, or measures knowing how the call ended. It measures skill — and the rollup built on top of it still reported a driver that does not exist.',
+    status: 'shipped',
     problem:
       'Agents close some calls and lose others for reasons that are rarely documented. What if an AI layer could identify the patterns and turn them into a coaching tool to actually move close rates?',
     problemAttribution: 'Named in the role brief',
@@ -396,10 +400,114 @@ export const BETS: Bet[] = [
       'Scoring transcripts against a rubric is the easiest demo on this list to build and the easiest to fool yourself with: an unvalidated rubric produces confident numbers that measure nothing, and it looks identical to one that works. The claim worth testing is not that a model can score a call — it plainly can — but that the score tracks selling behaviour rather than hindsight.',
     killCriterion:
       'Score every call twice: once with the outcome withheld, once with it revealed. If the scores move materially between the two, the rubric is reading the outcome rather than the behaviour, and the manager-facing dashboard dies — a tool that grades known-won calls higher teaches a rep nothing. Per-call review with verbatim quotes may still survive that; the aggregate scoreboard does not. Registered before building.',
-    verdict: 'pending',
+    built: [
+      'Sixty transcripts assembled from a fixed line bank keyed by (dimension, level), so the depicted level is not estimated — it is the key that selected the line',
+      'The turn index of every signal-carrying line recorded as it is placed, which is what makes quote attribution measurable rather than quote existence',
+      'A scoring schema in which a score with no quote, or a dimension scored twice, cannot be parsed at all',
+      'Quote verification against the transcript after the model returns, downgrading any score whose evidence is not there',
+      'The outcome-leakage control: every call scored twice, outcome hidden and revealed, nothing else changed',
+      'A permutation test on the rollup, added after the bare ranking was found to be the defect',
+      'Six negative controls proving the quote verifier can fail, including one that caught a flaw in itself',
+    ],
+    metrics: [
+      {
+        name: 'Outcome-leakage shift',
+        value: '0.25 levels',
+        detail: 'against the 0.5 threshold registered before the build; signed shift +0.01',
+        source: 'eval_run',
+      },
+      {
+        name: 'Holdout agreement with the planted level',
+        value: '45.5% exact',
+        detail: '85.4% within one level, n=45; rapport worst at 30.2% exact',
+        source: 'eval_run',
+        weakest: true,
+      },
+      {
+        name: 'Quote attribution — share landing on the line that carries the behaviour',
+        value: '93–100%',
+        detail: 'on four of five dimensions; rapport 74%. Zero scores withdrawn across 120 reviews',
+        source: 'eval_run',
+      },
+      {
+        name: 'Zero-weight dimension reported as a driver by the bare ranking',
+        value: 'Yes, 4th of 5',
+        detail: 'above compliance language, which has real weight. p = 0.069 — noise',
+        source: 'eval_run',
+      },
+      {
+        name: 'Malformed responses re-asked before they parsed',
+        value: '14 of 134',
+        detail: '10.4%. Without the retry the first full run died at call 15',
+        source: 'instrumented',
+      },
+    ],
+    cost: {
+      hours: '~9',
+      api: '$3.33',
+      note: 'One 120-review sweep. A resume cache means an interrupted run does not re-bill, and the re-analysis that added the permutation test cost nothing.',
+    },
+    roi: [
+      {
+        lever:
+          'Coaching time is spent on the calls and the moments worth reviewing, instead of on finding them.',
+        formula:
+          'managers × hours/week spent listening × share that is search rather than coaching × loaded hourly cost × 52',
+        inputs: [
+          { name: 'Sales managers reviewing calls', value: 'Business input', basis: 'guess' },
+          {
+            name: 'Hours per week each spends listening to recordings',
+            value: 'Business input',
+            basis: 'guess',
+          },
+          {
+            name: 'Share of that time spent locating the moment rather than coaching it',
+            value: 'Business input',
+            basis: 'guess',
+            note: 'This is the only part the tool touches. Coaching time itself is not saved and should not be counted.',
+          },
+        ],
+        caveat:
+          'Worth nothing if managers are not listening to calls today — in which case the tool creates work rather than saving it, and the business case is a revenue argument that needs an A/B test, not a cost argument.',
+      },
+      {
+        lever:
+          'A close-rate lift from coaching the three behaviours the rollup can actually detect.',
+        formula:
+          'agents × quoted cases/month × baseline close rate × assumed lift × average commission × 12',
+        inputs: [
+          { name: 'Producing agents', value: 'Business input', basis: 'guess' },
+          { name: 'Baseline close rate', value: 'Business input', basis: 'guess' },
+          {
+            name: 'Lift from coaching',
+            value: 'Unknown — requires an A/B test',
+            basis: 'guess',
+            note: 'The load-bearing input, and the one nothing in this build measures. A rollup that identifies a driver does not establish that coaching it changes behaviour.',
+          },
+        ],
+        caveat:
+          'This lever is soft and I would not put a number on it in a business case. The eval shows the rollup can identify three real drivers at this sample size; it says nothing about whether telling an agent about them moves their close rate. That is a controlled-trial question.',
+      },
+    ],
+    verdict: 'de_scope',
     verdictRationale:
-      'No verdict yet. The leakage control is the first thing built, not the last, because it is the cheapest way to find out whether the rest of the bet is worth constructing.',
+      'The registered criterion held — mean absolute shift of 0.25 levels against a 0.5 threshold, signed shift +0.01. The rubric is not reading the outcome, which is the failure I expected and would have bet on. What killed the aggregate view was a check I nearly did not make. The planted zero-weight dimension came back ranked 4th of 5 with a +0.62 lift, above a dimension that has real weight. Three hypotheses were testable and I tested them: it is not leakage, and it is not the halo effect I assumed — it is noise, p = 0.069 on 19 won and 19 lost calls. The defect was not the model, whose scores correlate 0.71–0.92 with their own planted levels. It was the rollup reporting five point estimates as a ranking with no uncertainty attached. So: the bare ranking is dead, the rollup ships only with a significance test and only the three dimensions that clear it, and the per-agent numeric scorecard waits for human-rated labels — 45.5% exact agreement is not a number to show a producing agent. The per-call review survives on its own evidence: 93–100% quote attribution on four of five dimensions, zero scores withdrawn across 120 reviews.',
     wouldChangeIt:
-      'The leakage delta, and one more thing the transcripts are designed to expose: one rubric dimension is generated with zero weight on the outcome. If the rollup correctly finds that dimension does not predict anything, the instrument can detect a null result — which is what has to be true before a positive finding from it means much.',
+      'Thirty calls rated independently by two sales managers. Everything here is agreement with a generator, and until inter-rater agreement exists no accuracy figure justifies showing a score to an agent — it is also the cheapest open item. Then the same rollup at n≈200, where the permutation test says compliance language becomes detectable. Nothing about a better model would change the verdict; the defect was in the reporting layer.',
+    links: [
+      {
+        label: 'Live demo',
+        href: 'https://scottdelia.github.io/coaching-copilot/',
+        primary: true,
+      },
+      {
+        label: 'Source',
+        href: 'https://github.com/scottdelia/coaching-copilot',
+      },
+      {
+        label: 'Findings write-up',
+        href: 'https://github.com/scottdelia/coaching-copilot/blob/main/docs/FINDINGS.md',
+      },
+    ],
   },
 ];
