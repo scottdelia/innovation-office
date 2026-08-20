@@ -1,4 +1,4 @@
-# Innovation Office — applied AI portfolio
+# Innovation Office, applied AI portfolio
 
 > Every demo linked from this site runs on **synthetic data**. The carriers, the
 > guidelines, the agents, and the transcripts are fabricated for demonstration
@@ -17,7 +17,7 @@ The operating idea the three share:
 The honest constraint on this kind of work is rarely the model. It is that
 nobody can tell you whether the output is right, and the ground truth to check
 it against does not exist yet. Generating the corpus from a known structured
-source makes accuracy something measured rather than spot-checked — and a scorer
+source makes accuracy something measured rather than spot-checked, and a scorer
 that cannot fail gets caught by a negative control.
 
 ---
@@ -36,7 +36,7 @@ Bet 1 has a [live demo](https://scottdelia.github.io/underwriting-copilot/), a
 that leads with what broke.
 
 Bets 2 and 3 have no verdict because they have no evidence. Each carries the
-result that ends it, written down in advance — a criterion set afterwards is an
+result that ends it, written down in advance. A criterion set afterwards is an
 opinion, and set beforehand it is a decision.
 
 ---
@@ -49,8 +49,8 @@ enforces the tagging: `MeasuredMetric` cannot be constructed without a `source`
 and `RoiInput` cannot be constructed without a `basis`, so a guess cannot end up
 on the page dressed as a measurement.
 
-**The ROI models have no total.** The inputs that would decide one — how many
-producing agents, what share of declines trace to a misjudged class — belong to
+**The ROI models have no total.** The inputs that would decide one, how many
+producing agents, what share of declines trace to a misjudged class, belong to
 the business and are not mine to invent. The site shows the lever, the
 arithmetic, and every input tagged `measured`, `industry assumption`, or `needs a
 real number`. `guess` is a permitted value; a model with no guesses in it is
@@ -85,7 +85,7 @@ on every push, so it cannot drift from the repository.
 ## Conventions
 
 - **React and Tailwind v4, and no UI, icon, or chart library.** The only other
-  runtime dependency is `@fontsource-variable/inter` — a typeface, self-hosted so
+  runtime dependency is `@fontsource-variable/inter`. A typeface, self-hosted so
   the page makes no third-party request on load. Icons are inline SVG.
 - **The design tokens in `src/index.css` are lifted verbatim from the
   Underwriting Copilot.** That is the reason they were written as tokens. The two
@@ -95,7 +95,7 @@ on every push, so it cannot drift from the repository.
   is not one `dark:` class anywhere.
 - **The router is thirty lines of hash routing** over `useSyncExternalStore`.
   Hash rather than the History API because Pages serves static files and cannot
-  rewrite a deep link back to `index.html` — under the History API a refresh on
+  rewrite a deep link back to `index.html`, under the History API a refresh on
   `/bet/underwriting` would 404.
 - **Content is data, not prose in a component** (`src/content/bets.ts`). A card
   and a one-pager render the same facts at different depths, and a fact written

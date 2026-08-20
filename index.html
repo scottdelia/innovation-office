@@ -4,32 +4,17 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
-    <title>Innovation Office — applied AI portfolio</title>
+    <title>Innovation Office · Applied AI portfolio</title>
     <meta
       name="description"
       content="Three time-boxed AI bets for insurance distribution, each with a measured result or a kill criterion registered before the work. Every number is tagged with where it came from."
     />
-    <meta property="og:title" content="Innovation Office — applied AI portfolio" />
+    <meta property="og:title" content="Innovation Office · Applied AI portfolio" />
     <meta
       property="og:description"
       content="Three time-boxed AI bets, each with a measured result or a pre-registered kill criterion."
     />
     <meta property="og:type" content="website" />
-    <script>
-      // Applies a stored colour scheme before first paint. It has to run here,
-      // inline and ahead of the bundle: doing it in React means the page paints
-      // light, then flips, and a white flash on a dark-themed machine is worse
-      // than not offering the choice.
-      //
-      // Absent or invalid storage leaves the attribute off, which hands the
-      // decision to the prefers-color-scheme query in index.css.
-      try {
-        var s = localStorage.getItem('uc-color-scheme');
-        if (s === 'light' || s === 'dark') {
-          document.documentElement.setAttribute('data-theme', s);
-        }
-      } catch (e) {}
-    </script>
   </head>
   <body>
     <div id="root"></div>

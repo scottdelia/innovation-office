@@ -2,10 +2,55 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "name": "portfolio",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "5174"
+      ],
+      "port": 5174
+    },
+    {
       "name": "coaching-ui",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["--prefix", "C:/_Development/coaching_copilot/frontend", "run", "dev"],
+      "runtimeArgs": [
+        "--prefix",
+        "C:/_Development/coaching_copilot/frontend",
+        "run",
+        "dev"
+      ],
       "port": 5173
+    },
+    {
+      "name": "underwriting-ui",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "C:/_Development/quility_poc/frontend",
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "5175"
+      ],
+      "port": 5175
+    },
+    {
+      "name": "onboarding-ui",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [
+        "--prefix",
+        "C:/_Development/onboarding_copilot/frontend",
+        "run",
+        "dev",
+        "--",
+        "--port",
+        "5176"
+      ],
+      "port": 5176
     }
   ]
 }

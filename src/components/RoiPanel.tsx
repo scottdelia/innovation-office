@@ -6,8 +6,8 @@ import type { InputBasis, RoiModel } from '../content/bets';
  * WHY THERE IS NO TOTAL
  * ---------------------
  * The tempting version of this component ends in a large dollar figure. It
- * would be fabricated. The inputs that decide it — how many producing agents,
- * what share of declines trace to a misjudged class — belong to the business and
+ * would be fabricated. The inputs that decide it, how many producing agents
+ * and what share of declines trace to a misjudged class, belong to the business and
  * are not mine to invent. A confident total built on invented inputs is exactly
  * the kind of number that gets a project funded and then quietly abandoned.
  *

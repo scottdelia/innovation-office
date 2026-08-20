@@ -12,6 +12,9 @@ import { BetCard } from '../components/BetCard';
  */
 export function PortfolioView() {
   const shipped = BETS.filter((bet) => bet.status === 'shipped').length;
+  const killed = BETS.filter(
+    (bet) => bet.verdict === 'de_scope' || bet.verdict === 'kill',
+  ).length;
 
   return (
     <>
@@ -32,10 +35,14 @@ export function PortfolioView() {
       <section className="mt-12">
         <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
           <h2 className="text-title font-semibold text-ink">The bets</h2>
-          <p className="text-sm text-ink-subtle">
+          <p className="gauge-label">
+            {/* The trailing clause used to cover bets that were scoped but not
+                built. All three are built now, so it says what is true instead
+                of what was true when it was written. */}
             <span className="tabular">{shipped}</span> of{' '}
-            <span className="tabular">{BETS.length}</span> built and measured ·
-            the rest carry a kill criterion registered before the work
+            <span className="tabular">{BETS.length}</span> built ·{' '}
+            <span className="tabular">{killed}</span> de-scoped on a criterion
+            set first
           </p>
         </div>
 

@@ -8,7 +8,7 @@
  * cannot be constructed without a `source`, and `RoiInput` cannot be constructed
  * without a `basis`. A page that reports an eval result and a back-of-envelope
  * guess in the same typeface, without saying which is which, is not being
- * honest with the reader — and the type system is a cheaper way to enforce that
+ * honest with the reader, and the type system is a cheaper way to enforce that
  * than remembering.
  */
 
@@ -104,29 +104,30 @@ export interface Bet {
 }
 
 export const THESIS = {
-  headline: 'Synthetic ground truth is how you evaluate AI on a messy problem before you have clean data.',
+  headline:
+    'Generate the ground truth, and you can measure on day one instead of month six.',
   body: [
-    'Every bet here is scored against data generated from a known structured source. The corpus is rendered from it, so the right answer is known exactly — down to the cell and the page it printed on. Accuracy becomes something measured rather than spot-checked, and a scorer that cannot fail is caught by a negative control.',
-    'That matters because the honest constraint on this kind of work is rarely the model. It is that nobody can tell you whether the output is right, and the ground truth to check it against does not exist yet. Generating the ground truth is how you start measuring on day one instead of month six.',
+    'Every corpus here is rendered from structured data, so the right answer is known exactly: the cell, the page, the turn. Accuracy is measured rather than spot-checked, and a scorer that cannot fail gets caught by a negative control.',
+    'The constraint on this work is rarely the model. It is that nobody can tell you whether the output is right.',
   ],
 };
 
 export const OPERATING_NOTES = [
   {
-    title: 'A kill criterion before the build, not after',
-    body: 'Every bet here carried the result that would end it, written down before the work started. A criterion set afterwards is an opinion; set beforehand it is a decision, and it stops a disappointing number being reinterpreted as an encouraging one. Two of the three were decided by the criterion they registered.',
+    title: 'Kill criteria before the build',
+    body: 'Each bet carried the number that would end it, written down first. Two of three were decided by it.',
   },
   {
     title: 'A criterion that holds is not a clean bill of health',
-    body: 'Bet 3 passed the test it registered and was de-scoped anyway, by a second check that was not the headline: a dimension planted with zero weight came back ranked as a driver. Pre-registration stops you moving the goalposts. It does not tell you whether you chose the right posts, and the only defence against that is planting a result you already know the answer to.',
+    body: 'Bet 3 passed its own test and was de-scoped by a second one. Pre-registration stops you moving the goalposts. It does not tell you whether you picked the right posts.',
   },
   {
     title: 'Every number says where it came from',
-    body: 'An eval result, an instrumented measurement, and an estimate are three different kinds of claim. They are tagged on this page so the reader can weigh them separately, rather than being asked to trust a total.',
+    body: 'An eval result, an instrumented measurement, and an estimate are three different claims. They are tagged, not blended into a total.',
   },
   {
-    title: 'The failures are the argument',
-    body: 'The weakest metric in each bet is called out rather than buried. A portfolio that only shows the happy path is asking to be taken on faith, which is exactly what a measured result is supposed to replace.',
+    title: 'The weakest metric is on the card',
+    body: 'Each bet surfaces the number that holds it back. A portfolio showing only the happy path is asking to be taken on faith.',
   },
 ];
 
@@ -136,56 +137,50 @@ export const BETS: Bet[] = [
     index: 1,
     title: 'Underwriting Copilot',
     summary:
-      'Cross-carrier rate class comparison from a plain-language prospect, with the guideline text and page behind every claim.',
+      'Four carriers compared from one plain-language case, every claim traced to its page.',
     status: 'shipped',
     problem:
-      'No single carrier guide answers the question. Each one names its rate classes differently and puts its A1c and build limits somewhere else, so placing a case means reading four documents and holding four vocabularies at once. In practice agents guess, ask a colleague who has written the case before, or submit and find out.',
+      'Placing a diabetic case means reading four carrier guides in four vocabularies. Agents guess, ask someone who has written it before, or submit and find out.',
     problemAttribution: 'The gap this bet was built against',
     hypothesis:
-      'If an agent can see every carrier’s likely class in one place with the guideline text behind it, quote accuracy rises and declines fall — and a new agent stops needing two years of tribal knowledge to place a diabetic case.',
+      'Put every carrier’s likely class in one place with the guideline text behind it, and quote accuracy rises while declines fall.',
     built: [
-      'Four synthetic carrier guides rendered from structured data, so extraction ground truth is exact down to the cell and the page',
-      'Vision-based table extraction into SQLite, kept separate from prose chunking because a build chart run through a text chunker returns confidently wrong weight limits',
-      'A router that answers three of four query types without a synthesis call — a published build limit read from the table is the number, not a number that might be right',
-      'Citation verification that discards any claim whose quoted text is not in the evidence supplied, and downgrades a verdict to abstention when that empties its support',
-      'A 50-item eval run three times, with a negative control proving the scorer can fail',
+      'Four carrier guides rendered from structured data, so extraction truth is exact to the cell and page',
+      'Build charts extracted as tables, never chunked as prose. A chunked weight limit is confidently wrong',
+      'A router that answers three of four query types without a synthesis call',
+      'Any claim whose quote is missing from the evidence is dropped. A verdict with no support left becomes an abstention',
+      '50 items, 3 runs, plus a negative control proving the scorer can fail',
     ],
     metrics: [
       {
         name: 'Verdict accuracy',
         value: '91.4%',
-        detail: '89.4–93.9 across 3 runs · σ 2.32',
-        source: 'eval_run',
-      },
-      {
-        name: 'Retrieval hit rate',
-        value: '100%',
-        detail: 'no variance across 3 runs',
+        detail: '89.4 to 93.9 across 3 runs · σ 2.32',
         source: 'eval_run',
       },
       {
         name: 'Citation correctness',
         value: '99.9%',
-        detail: 'checked against the PDF, not against what the pipeline believed it sent',
+        detail: 'checked against the PDF, not against what the pipeline thought it sent',
+        source: 'eval_run',
+      },
+      {
+        name: 'Table extraction',
+        value: '100%',
+        detail: 'all 625 build-chart cells, not a sample · 0 fabricated rows',
         source: 'eval_run',
       },
       {
         name: 'Refusal on out-of-corpus',
         value: '83.3%',
-        detail: '75–87.5 across 3 runs · σ 7.22 — a 12-point spread on 8 items',
+        detail: '75 to 87.5 across 3 runs · σ 7.22. A 12-point spread on 8 items',
         source: 'eval_run',
         weakest: true,
       },
       {
         name: 'Hallucinated citations',
-        value: '0.33 per run',
-        detail: 'caught by verification and reported, never rendered',
-        source: 'eval_run',
-      },
-      {
-        name: 'Table extraction accuracy',
-        value: '100%',
-        detail: 'all 625 build-chart cells, not a sample · 0 fabricated rows',
+        value: '0.33 / run',
+        detail: 'caught by verification, never rendered',
         source: 'eval_run',
       },
       {
@@ -197,75 +192,68 @@ export const BETS: Bet[] = [
     ],
     cost: {
       hours: 'Not instrumented',
-      api: '$0.64 measured on ingestion',
-      note: 'Spend is instrumented on the path that runs once and not on the path that runs thousands of times a day. That is backwards, it is the sharpest criticism I have of my own build, and it is written up rather than left out.',
+      api: '$0.64 on ingestion',
+      note: 'Measured on the path that runs once, not the one that runs all day. That is backwards, and it is the sharpest criticism I have of this build.',
     },
     roi: [
       {
-        lever: 'Placement rate — cases that come back rated or declined after being quoted at a class the carrier would not have offered.',
+        lever:
+          'Cases quoted at a class the carrier would not have offered, and returned rated or declined.',
         formula:
-          'agents × cases per agent per year × decline rate attributable to misjudged class × average first-year commission',
+          'agents × cases per agent per year × declines from a misjudged class × first-year commission',
         inputs: [
           {
             name: 'Producing agents',
             value: 'Business input',
             basis: 'guess',
-            note: 'Quility publishes "thousands"; the model needs the real producing count, not the licensed count.',
+            note: 'Quility publishes "thousands". The model needs the producing count, not the licensed count.',
           },
           {
-            name: 'Decline rate from a misjudged class',
+            name: 'Declines from a misjudged class',
             value: 'Business input',
             basis: 'guess',
-            note: 'The one number that decides whether this bet is worth anything. It should come from placement data, not from me.',
+            note: 'The number that decides whether this bet is worth anything. It should come from placement data.',
           },
           {
-            name: 'Verdict accuracy on the indexed corpus',
+            name: 'Verdict accuracy',
             value: '91.4%',
             basis: 'measured',
-            note: 'On a synthetic corpus. Real guides will be lower until the extraction is reviewed.',
+            note: 'On a synthetic corpus. Real guides will score lower until extraction is reviewed.',
           },
         ],
         caveat:
-          'This is worth nothing if declines are driven by disclosure and lab results rather than by class misjudgement at quote time. That is checkable against placement data before a line of further code is written, and it should be checked first.',
+          'Worth nothing if declines come from disclosure and labs rather than class misjudgement at quote time. Checkable against placement data before another line is written.',
       },
       {
-        lever: 'New-agent ramp — the months before an agent has absorbed enough carrier-specific knowledge to place a case without asking.',
-        formula:
-          'new agents per year × months of ramp removed × monthly contribution per producing agent',
+        lever: 'Months of ramp before a new agent can place a case without asking.',
+        formula: 'new agents per year × ramp months removed × monthly contribution per agent',
         inputs: [
-          {
-            name: 'New agents onboarded per year',
-            value: 'Business input',
-            basis: 'guess',
-          },
+          { name: 'New agents per year', value: 'Business input', basis: 'guess' },
           {
             name: 'Ramp months removed',
             value: 'Unknown',
             basis: 'guess',
-            note: 'Not estimable from a demo. It needs a cohort comparison between agents with and without the tool.',
+            note: 'Not estimable from a demo. Needs a cohort comparison.',
           },
         ],
         caveat:
-          'Ramp reduction is the most attractive line in this model and the least evidenced. I would not put a number on it before running a cohort test.',
+          'The most attractive line in this model and the least evidenced. I would not put a number on it before a cohort test.',
       },
     ],
     verdict: 'iterate',
     verdictRationale:
-      'The retrieval and citation machinery holds: retrieval hit rate is 100%, citation correctness is 99.9% checked independently against the source PDF, and fabricated citations are caught rather than rendered. Two things stop it going further. Refusal on out-of-corpus questions is 83.3% with a 12-point spread across three runs, which is not a boundary I would put in front of a producing agent. And the eval labels have never been reviewed by a human — they are computed by an oracle written by the same person as the prompt, from the same documents, so the two could be wrong together.',
+      'Retrieval and citations hold. Two things stop it going further. Refusal on out-of-corpus questions is 83.3% with a 12-point spread across three runs, which is not a boundary to put in front of a producing agent. And no human has reviewed the eval labels: the oracle and the prompt share an author and a source, so both can be wrong together.',
     wouldChangeIt:
-      'Refusal above 95% with a spread under 5 points across five runs, plus a human-reviewed label set. Then carrier permission and a versioned document feed before it touches a real case, because a guide that changed last week against an index built last month produces a confidently wrong answer with a correct-looking citation.',
+      'Refusal above 95% with a spread under 5 points over five runs, plus a human-reviewed label set. Then a versioned document feed, because a guide that changed last week against an index built last month answers confidently with a correct-looking citation.',
     links: [
       {
         label: 'Live demo',
         href: 'https://scottdelia.github.io/underwriting-copilot/',
         primary: true,
       },
+      { label: 'Source', href: 'https://github.com/scottdelia/underwriting-copilot' },
       {
-        label: 'Source',
-        href: 'https://github.com/scottdelia/underwriting-copilot',
-      },
-      {
-        label: 'Findings write-up',
+        label: 'Findings',
         href: 'https://github.com/scottdelia/underwriting-copilot/blob/main/docs/FINDINGS.md',
       },
     ],
@@ -274,113 +262,103 @@ export const BETS: Bet[] = [
   {
     id: 'agent-onboarding',
     index: 2,
-    title: 'Agent Onboarding Copilot',
+    title: 'Agent Onboarding',
     summary:
-      'Where the days actually go between a signed agent and a first submitted case — and which of them a model can remove. The answer is almost none of them.',
+      'Where 15 days actually go, and how little of it a model can remove.',
     status: 'shipped',
     problem:
       'An agent onboarding workflow that takes days and involves too many manual handoffs. What if it took hours?',
     problemAttribution: 'Named in the role brief',
     hypothesis:
-      'The obvious build is a model that reads the licensing paperwork. I thought that build was close to worthless and that the interesting version of this bet was proving it. The claim: the bottleneck is not parsing but waiting — state licence verification, a background vendor, and a per-carrier appointment queue that no model shortens. Extraction moves total elapsed time by under 10%, and the real lever is catching a defective packet before it enters a carrier queue.',
+      'The obvious build reads the licensing paperwork. I thought that build was close to worthless, and that proving it was the interesting version of this bet. The bottleneck is waiting, not parsing.',
     built: [
-      'A twelve-agent synthetic cohort with per-step touch time and wait time kept separate — the instrument the whole bet turns on, built before any model call',
-      'A critical-path model, because a background check and a licence lookup run concurrently and summing both overstates the timeline badly',
-      'A deterministic gap engine checking every packet against each target carrier’s requirements, with no model in it at all',
-      'Vision extraction with per-field provenance, every field nullable, and excerpts verified against the document’s own text layer',
+      'A twelve-agent cohort with touch time and wait time kept separate. The instrument, built before any model call',
+      'A critical-path model, because a background check and a licence lookup run concurrently and summing both overstates the timeline',
+      'A deterministic gap engine checking each packet against carrier requirements, with no model in it',
+      'Vision extraction with per-field provenance, every field nullable, excerpts verified against the document’s own text layer',
       'A negative control proving the extraction scorer can fail',
     ],
     metrics: [
       {
-        name: 'Extraction’s share of elapsed onboarding time',
+        name: 'What extraction removes',
         value: '0.1%',
         detail: 'against a 10% kill threshold registered before the build',
         source: 'eval_run',
         weakest: true,
       },
       {
-        name: 'Time in external queues (carrier / state / vendor)',
+        name: 'Time in external queues',
         value: '93.9%',
-        detail: 'of a 15.2-day mean, along the critical path',
-        source: 'eval_run',
+        detail: 'carrier, state, vendor. Of a 15.2-day mean, along the critical path',
+        source: 'instrumented',
       },
       {
-        name: 'Time with someone actively working',
+        name: 'Someone actively working',
         value: '0.3%',
-        detail: '1.0h of 365.6h — the only part extraction can touch',
-        source: 'eval_run',
+        detail: 'about 68 minutes of 15.2 days',
+        source: 'instrumented',
       },
       {
-        name: 'Rule engine vs extraction',
+        name: 'What the rule engine removes',
         value: '22× more',
-        detail: 'elapsed time removed by catching defects before a carrier queue',
-        source: 'eval_run',
+        detail: 'than extraction, with no model in it',
+        source: 'instrumented',
       },
       {
-        name: 'Gap engine precision / recall',
+        name: 'Gap detection',
         value: '100% / 100%',
-        detail: '8 planted defects, 12 agents, variance 0.00 (deterministic)',
+        detail: 'precision and recall on 8 planted defects · variance 0.00',
         source: 'eval_run',
       },
       {
-        name: 'Extraction field accuracy',
+        name: 'Extraction accuracy',
         value: '100%',
-        detail: '96 field values, 0 confident-wrong — a ceiling on clean PDFs, not a forecast',
+        detail: '96 field values, 0 confident-wrong. A ceiling on clean generated PDFs, not a forecast',
         source: 'eval_run',
       },
     ],
     cost: {
-      hours: 'Not instrumented',
-      api: '$0.39 total',
-      note:
-        'The two components that produced the finding — the cycle-time model and the gap engine — cost nothing to run, because neither calls a model. That is the economic version of the same point: the cheapest thing in the project is the thing that decided it.',
+      hours: '~11',
+      api: '$0.39',
+      note: 'The cycle-time model, which decided the bet, cost nothing. It has no model in it.',
     },
     roi: [
       {
-        lever:
-          'Rework prevention — a packet defect caught at submission instead of by a carrier, which costs a full round trip through their queue rather than minutes.',
-        formula:
-          'agents onboarded per year × share whose packet bounces × days lost per bounce × cost of a day of delayed activation',
+        lever: 'Packets caught before they enter a carrier queue instead of bouncing back from one.',
+        formula: 'packets per year × bounce rate × days per bounce × carrying cost of an idle agent',
         inputs: [
+          { name: 'Contracting packets per year', value: 'Business input', basis: 'guess' },
           {
-            name: 'Elapsed time lost to one bounced packet',
-            value: '96h (19% of that agent’s total)',
-            basis: 'measured',
-            note: 'Measured in the cohort model for the agent carrying a legal-name mismatch.',
-          },
-          {
-            name: 'Share of packets that bounce',
+            name: 'Share bounced for a fixable defect',
             value: 'Business input',
             basis: 'guess',
-            note: 'One agent in twelve here is my assumption, not an observation. This is the number that sizes the whole lever and it should come from contracting data.',
+            note: 'The load-bearing input. Contracting records have it.',
           },
           {
-            name: 'Cost of a day of delayed activation',
-            value: 'Business input',
-            basis: 'guess',
+            name: 'Days lost per bounce',
+            value: '7.4',
+            basis: 'industry_assumption',
+            note: 'Modelled from carrier SLAs, not observed.',
           },
         ],
         caveat:
-          'This is worth nothing if packets rarely bounce, or if the common bounce reason is something a completeness check cannot see — a background result, say, rather than a data defect. Both are checkable against contracting records before another line is written.',
+          'Worth nothing if packets rarely bounce, or if the common reason is something a completeness check cannot see. Both checkable against contracting records.',
       },
     ],
     verdict: 'de_scope',
     verdictRationale:
-      'The kill criterion fired, and not narrowly: extraction removes 0.1% of elapsed time against a 10% threshold, and it still fires with carrier queues cut to a quarter. Someone actively working is 0.3% of a 15.2-day onboarding, so no accuracy figure makes “days into hours” available. The framing dies. What survives is in the same data — the deterministic completeness check removes 22× more elapsed time than extraction and has no model in it, and a nudge queue recovers idle time that belongs to nobody. Extraction was built anyway and is trustworthy on its own terms (100% on 96 field values, zero confident-wrong), which answers a different question: it can accelerate review, not compress the timeline.',
+      'The criterion fired, and not narrowly. Extraction removes 0.1% of elapsed time against a 10% threshold, and it still fires with carrier queues cut to a quarter. Someone actively working is 0.3% of a 15.2-day onboarding, so no accuracy figure makes "days into hours" available. What survives is in the same data: a deterministic completeness check removes 22× more, and it has no model in it.',
     wouldChangeIt:
-      'The real touch-versus-wait split from the workflow system, and the real rework rate from contracting data. The conclusion survives large errors in the assumed durations, but it is still a model, and those two numbers are what would move it. Nothing about extraction accuracy would — that is the point of the finding.',
+      'The real touch-versus-wait split from the workflow system, and the real rework rate from contracting. Extraction accuracy would not move it. That is the finding.',
     links: [
       {
         label: 'Live demo',
         href: 'https://scottdelia.github.io/onboarding-copilot/',
         primary: true,
       },
+      { label: 'Source', href: 'https://github.com/scottdelia/onboarding-copilot' },
       {
-        label: 'Source',
-        href: 'https://github.com/scottdelia/onboarding-copilot',
-      },
-      {
-        label: 'Findings write-up',
+        label: 'Findings',
         href: 'https://github.com/scottdelia/onboarding-copilot/blob/main/docs/FINDINGS.md',
       },
     ],
@@ -391,52 +369,52 @@ export const BETS: Bet[] = [
     index: 3,
     title: 'Call Coaching',
     summary:
-      'Whether an LLM rubric over call transcripts measures selling skill, or measures knowing how the call ended. It measures skill — and the rollup built on top of it still reported a driver that does not exist.',
+      'Does a rubric score selling skill, or knowing how the call ended?',
     status: 'shipped',
     problem:
-      'Agents close some calls and lose others for reasons that are rarely documented. What if an AI layer could identify the patterns and turn them into a coaching tool to actually move close rates?',
+      'Agents close some calls and lose others for reasons nobody writes down. What if AI could find the pattern and turn it into coaching?',
     problemAttribution: 'Named in the role brief',
     hypothesis:
-      'Scoring transcripts against a rubric is the easiest demo on this list to build and the easiest to fool yourself with: an unvalidated rubric produces confident numbers that measure nothing, and it looks identical to one that works. The claim worth testing is not that a model can score a call — it plainly can — but that the score tracks selling behaviour rather than hindsight.',
+      'A model can plainly score a call. The claim worth testing is that the score tracks behaviour rather than hindsight, because an unvalidated rubric produces confident numbers that measure nothing and looks identical to one that works.',
     killCriterion:
-      'Score every call twice: once with the outcome withheld, once with it revealed. If the scores move materially between the two, the rubric is reading the outcome rather than the behaviour, and the manager-facing dashboard dies — a tool that grades known-won calls higher teaches a rep nothing. Per-call review with verbatim quotes may still survive that; the aggregate scoreboard does not. Registered before building.',
+      'Score every call twice, outcome withheld then revealed, nothing else changed. If the scores move by 0.5 rubric levels or more, the rubric reads the outcome rather than the behaviour and the manager dashboard dies. Registered before building.',
     built: [
-      'Sixty transcripts assembled from a fixed line bank keyed by (dimension, level), so the depicted level is not estimated — it is the key that selected the line',
-      'The turn index of every signal-carrying line recorded as it is placed, which is what makes quote attribution measurable rather than quote existence',
-      'A scoring schema in which a score with no quote, or a dimension scored twice, cannot be parsed at all',
-      'Quote verification against the transcript after the model returns, downgrading any score whose evidence is not there',
-      'The outcome-leakage control: every call scored twice, outcome hidden and revealed, nothing else changed',
-      'A permutation test on the rollup, added after the bare ranking was found to be the defect',
-      'Six negative controls proving the quote verifier can fail, including one that caught a flaw in itself',
+      'Sixty transcripts assembled from a line bank keyed by (dimension, level). The depicted level is the key that picked the line, not an estimate',
+      'The turn index of every signal-carrying line recorded as it is placed, which makes quote attribution measurable',
+      'A schema in which a score with no quote, or a dimension scored twice, cannot be parsed',
+      'Quote verification against the transcript, withdrawing any score whose evidence is not there',
+      'The leakage control: every call scored twice, hidden and revealed',
+      'A permutation test, added after the bare ranking turned out to be the defect',
+      'Six negative controls proving the verifier can fail, one of which caught a flaw in itself',
     ],
     metrics: [
       {
         name: 'Outcome-leakage shift',
         value: '0.25 levels',
-        detail: 'against the 0.5 threshold registered before the build; signed shift +0.01',
+        detail: 'against the 0.5 threshold registered first · signed shift +0.01',
         source: 'eval_run',
       },
       {
-        name: 'Holdout agreement with the planted level',
+        name: 'Zero-weight dimension called a driver',
+        value: 'Yes, 4th of 5',
+        detail: 'above compliance language, which has real weight. p = 0.069, so noise',
+        source: 'eval_run',
+      },
+      {
+        name: 'Quote attribution',
+        value: '93 to 100%',
+        detail: 'on four of five dimensions. Rapport 74%. 0 scores withdrawn in 120 reviews',
+        source: 'eval_run',
+      },
+      {
+        name: 'Agreement with the planted level',
         value: '45.5% exact',
-        detail: '85.4% within one level, n=45; rapport worst at 30.2% exact',
+        detail: '85.4% within one level, n=45. Rapport worst at 30.2%',
         source: 'eval_run',
         weakest: true,
       },
       {
-        name: 'Quote attribution — share landing on the line that carries the behaviour',
-        value: '93–100%',
-        detail: 'on four of five dimensions; rapport 74%. Zero scores withdrawn across 120 reviews',
-        source: 'eval_run',
-      },
-      {
-        name: 'Zero-weight dimension reported as a driver by the bare ranking',
-        value: 'Yes, 4th of 5',
-        detail: 'above compliance language, which has real weight. p = 0.069 — noise',
-        source: 'eval_run',
-      },
-      {
-        name: 'Malformed responses re-asked before they parsed',
+        name: 'Malformed responses re-asked',
         value: '14 of 134',
         detail: '10.4%. Without the retry the first full run died at call 15',
         source: 'instrumented',
@@ -445,67 +423,56 @@ export const BETS: Bet[] = [
     cost: {
       hours: '~9',
       api: '$3.33',
-      note: 'One 120-review sweep. A resume cache means an interrupted run does not re-bill, and the re-analysis that added the permutation test cost nothing.',
+      note: 'One 120-review sweep. A resume cache means an interrupted run does not re-bill, so the re-analysis that added the permutation test cost nothing.',
     },
     roi: [
       {
-        lever:
-          'Coaching time is spent on the calls and the moments worth reviewing, instead of on finding them.',
-        formula:
-          'managers × hours/week spent listening × share that is search rather than coaching × loaded hourly cost × 52',
+        lever: 'Coaching time spent coaching instead of hunting for the moment worth coaching.',
+        formula: 'managers × hours/week listening × share that is search × loaded hourly cost × 52',
         inputs: [
-          { name: 'Sales managers reviewing calls', value: 'Business input', basis: 'guess' },
+          { name: 'Managers reviewing calls', value: 'Business input', basis: 'guess' },
+          { name: 'Hours per week each spends listening', value: 'Business input', basis: 'guess' },
           {
-            name: 'Hours per week each spends listening to recordings',
+            name: 'Share of that spent locating the moment',
             value: 'Business input',
             basis: 'guess',
-          },
-          {
-            name: 'Share of that time spent locating the moment rather than coaching it',
-            value: 'Business input',
-            basis: 'guess',
-            note: 'This is the only part the tool touches. Coaching time itself is not saved and should not be counted.',
+            note: 'The only part the tool touches. Coaching time itself is not saved and should not be counted.',
           },
         ],
         caveat:
-          'Worth nothing if managers are not listening to calls today — in which case the tool creates work rather than saving it, and the business case is a revenue argument that needs an A/B test, not a cost argument.',
+          'Worth nothing if managers are not listening to calls today. Then the tool creates work, and the case is a revenue argument needing an A/B test.',
       },
       {
-        lever:
-          'A close-rate lift from coaching the three behaviours the rollup can actually detect.',
-        formula:
-          'agents × quoted cases/month × baseline close rate × assumed lift × average commission × 12',
+        lever: 'Close-rate lift from coaching the three behaviours the rollup can actually detect.',
+        formula: 'agents × quoted cases/month × close rate × lift × commission × 12',
         inputs: [
           { name: 'Producing agents', value: 'Business input', basis: 'guess' },
           { name: 'Baseline close rate', value: 'Business input', basis: 'guess' },
           {
             name: 'Lift from coaching',
-            value: 'Unknown — requires an A/B test',
+            value: 'Unknown',
             basis: 'guess',
-            note: 'The load-bearing input, and the one nothing in this build measures. A rollup that identifies a driver does not establish that coaching it changes behaviour.',
+            note: 'The load-bearing input, and the one nothing here measures. Identifying a driver does not establish that coaching it changes behaviour.',
           },
         ],
         caveat:
-          'This lever is soft and I would not put a number on it in a business case. The eval shows the rollup can identify three real drivers at this sample size; it says nothing about whether telling an agent about them moves their close rate. That is a controlled-trial question.',
+          'Soft, and I would not put a number on it. The eval shows the rollup can find three real drivers. It says nothing about whether telling an agent moves their close rate.',
       },
     ],
     verdict: 'de_scope',
     verdictRationale:
-      'The registered criterion held — mean absolute shift of 0.25 levels against a 0.5 threshold, signed shift +0.01. The rubric is not reading the outcome, which is the failure I expected and would have bet on. What killed the aggregate view was a check I nearly did not make. The planted zero-weight dimension came back ranked 4th of 5 with a +0.62 lift, above a dimension that has real weight. Three hypotheses were testable and I tested them: it is not leakage, and it is not the halo effect I assumed — it is noise, p = 0.069 on 19 won and 19 lost calls. The defect was not the model, whose scores correlate 0.71–0.92 with their own planted levels. It was the rollup reporting five point estimates as a ranking with no uncertainty attached. So: the bare ranking is dead, the rollup ships only with a significance test and only the three dimensions that clear it, and the per-agent numeric scorecard waits for human-rated labels — 45.5% exact agreement is not a number to show a producing agent. The per-call review survives on its own evidence: 93–100% quote attribution on four of five dimensions, zero scores withdrawn across 120 reviews.',
+      'The registered criterion held: scores shift 0.25 levels against a 0.5 threshold, so the rubric reads behaviour, not the result. A second check decided the bet. A dimension planted with zero weight ranked 4th of 5, above one with real weight. Not leakage, not the halo effect I assumed, just noise at p = 0.069. The defect was the rollup reporting five point estimates as a ranking with no uncertainty attached. So the bare ranking is dead, the rollup ships with a significance test, and the numeric scorecard waits for human labels. The per-call review survives on its evidence.',
     wouldChangeIt:
-      'Thirty calls rated independently by two sales managers. Everything here is agreement with a generator, and until inter-rater agreement exists no accuracy figure justifies showing a score to an agent — it is also the cheapest open item. Then the same rollup at n≈200, where the permutation test says compliance language becomes detectable. Nothing about a better model would change the verdict; the defect was in the reporting layer.',
+      'Thirty calls rated independently by two sales managers. Everything here is agreement with a generator, and it is the cheapest open item. Then the same rollup at n≈200, where compliance language becomes detectable. A better model would change nothing. The defect was in the reporting layer.',
     links: [
       {
         label: 'Live demo',
         href: 'https://scottdelia.github.io/coaching-copilot/',
         primary: true,
       },
+      { label: 'Source', href: 'https://github.com/scottdelia/coaching-copilot' },
       {
-        label: 'Source',
-        href: 'https://github.com/scottdelia/coaching-copilot',
-      },
-      {
-        label: 'Findings write-up',
+        label: 'Findings',
         href: 'https://github.com/scottdelia/coaching-copilot/blob/main/docs/FINDINGS.md',
       },
     ],

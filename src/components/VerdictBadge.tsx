@@ -8,7 +8,7 @@ import type { Verdict } from '../content/bets';
  * -------------------------------
  * The obvious treatment is green for scale and red for kill, and it is wrong.
  * The brief this portfolio answers measures success partly as "ideas that were
- * correctly killed before consuming real resources" — a kill is a successful
+ * correctly killed before consuming real resources". A kill is a successful
  * outcome of the process, and colouring it as an error teaches the opposite
  * lesson to the one the page exists to make.
  *

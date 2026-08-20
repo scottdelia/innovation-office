@@ -1,6 +1,5 @@
 import { BETS } from './content/bets';
 import { useRoute, navigate } from './router';
-import { ThemeToggle } from './components/ThemeToggle';
 import { PortfolioView } from './views/PortfolioView';
 import { BetView } from './views/BetView';
 
@@ -69,7 +68,6 @@ export default function App() {
               </span>
             </span>
           </button>
-          <ThemeToggle />
         </div>
       </header>
 
