@@ -119,7 +119,7 @@ export const OPERATING_NOTES = [
   },
   {
     title: 'A criterion that holds is not a clean bill of health',
-    body: 'Bet 3 passed its own test and was de-scoped by a second one. Pre-registration stops you moving the goalposts. It does not tell you whether you picked the right posts.',
+    body: 'Bet 3 passed its own test and was de-scoped by a second one. Running it twice on a corpus that differed only in punctuation moved two of five driver ranks. Pre-registration stops you moving the goalposts. It does not tell you whether you picked the right posts.',
   },
   {
     title: 'Every number says where it came from',
@@ -384,46 +384,46 @@ export const BETS: Bet[] = [
       'A schema in which a score with no quote, or a dimension scored twice, cannot be parsed',
       'Quote verification against the transcript, withdrawing any score whose evidence is not there',
       'The leakage control: every call scored twice, hidden and revealed',
-      'A permutation test, added after the bare ranking turned out to be the defect',
+      'A permutation test, added after two runs put the same zero-weight dimension in two different places',
       'Six negative controls proving the verifier can fail, one of which caught a flaw in itself',
     ],
     metrics: [
       {
         name: 'Outcome-leakage shift',
-        value: '0.25 levels',
-        detail: 'against the 0.5 threshold registered first · signed shift +0.01',
+        value: '0.24 levels',
+        detail: 'against the 0.5 threshold registered first. Held in both runs',
         source: 'eval_run',
       },
       {
-        name: 'Zero-weight dimension called a driver',
-        value: 'Yes, 4th of 5',
-        detail: 'above compliance language, which has real weight. p = 0.069, so noise',
+        name: 'Driver ranks that moved between two runs',
+        value: '2 of 5',
+        detail: 'corpus differed only in punctuation. The top three did not move; the bottom two swapped',
         source: 'eval_run',
       },
       {
         name: 'Quote attribution',
-        value: '93 to 100%',
-        detail: 'on four of five dimensions. Rapport 74%. 0 scores withdrawn in 120 reviews',
+        value: '95 to 98%',
+        detail: 'on four of five dimensions. Rapport 78%. 0 scores withdrawn in 120 reviews',
         source: 'eval_run',
       },
       {
         name: 'Agreement with the planted level',
-        value: '45.5% exact',
-        detail: '85.4% within one level, n=45. Rapport worst at 30.2%',
+        value: '52.7% exact',
+        detail: '88.6% within one level, n=45. Objection handling worst at 34.1%',
         source: 'eval_run',
         weakest: true,
       },
       {
         name: 'Malformed responses re-asked',
-        value: '14 of 134',
-        detail: '10.4%. Without the retry the first full run died at call 15',
+        value: '7 to 10%',
+        detail: 'across two runs. Without the retry the first one died at call 15',
         source: 'instrumented',
       },
     ],
     cost: {
-      hours: '~9',
-      api: '$3.33',
-      note: 'One 120-review sweep. A resume cache means an interrupted run does not re-bill, so the re-analysis that added the permutation test cost nothing.',
+      hours: '~11',
+      api: '$6.86',
+      note: 'Two 120-review sweeps at $3.33 and $3.53. The second was not planned. It is the one that produced the finding.',
     },
     roi: [
       {
@@ -461,9 +461,9 @@ export const BETS: Bet[] = [
     ],
     verdict: 'de_scope',
     verdictRationale:
-      'The registered criterion held: scores shift 0.25 levels against a 0.5 threshold, so the rubric reads behaviour, not the result. A second check decided the bet. A dimension planted with zero weight ranked 4th of 5, above one with real weight. Not leakage, not the halo effect I assumed, just noise at p = 0.069. The defect was the rollup reporting five point estimates as a ranking with no uncertainty attached. So the bare ranking is dead, the rollup ships with a significance test, and the numeric scorecard waits for human labels. The per-call review survives on its evidence.',
+      'The registered criterion held in both runs: scores shift 0.24 levels against a 0.5 threshold, so the rubric reads behaviour rather than the result. A second check decided the bet. I ran the identical eval twice on a corpus differing only in punctuation. The top three drivers did not move and stayed under p = 0.001. The bottom two swapped, and one of them is the dimension planted with zero weight, which run 1 put above a dimension with real weight and run 2 put below. Neither is distinguishable from chance. The defect was never the model, whose scores correlate 0.71 to 0.92 with their own planted levels. It was publishing five point estimates as a ranking with no uncertainty attached. So the bare ranking is dead, the rollup ships with a significance test, and the numeric scorecard waits for human labels. The per-call review survives on its evidence.',
     wouldChangeIt:
-      'Thirty calls rated independently by two sales managers. Everything here is agreement with a generator, and it is the cheapest open item. Then the same rollup at n≈200, where compliance language becomes detectable. A better model would change nothing. The defect was in the reporting layer.',
+      'Thirty calls rated independently by two sales managers. Everything here is agreement with a generator, and it is the cheapest open item. Then the same rollup at n around 200, where compliance language becomes detectable. A better model would change nothing. The defect was in the reporting layer.',
     links: [
       {
         label: 'Live demo',
