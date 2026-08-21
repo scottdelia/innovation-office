@@ -89,6 +89,15 @@ export interface Bet {
   question: string;
   /** The answer to `question`, in two sentences, with no jargon in them. */
   answer: string;
+  /**
+   * What to build instead, given that answer.
+   *
+   * Every one of these bets ended by redirecting rather than by stopping, and
+   * the first version of these pages buried that. A card that says an idea is
+   * dead and does not say what replaces it reads as a refusal, however good the
+   * arithmetic behind it is.
+   */
+  recommendation: string;
   /** One line, for search results and link previews. */
   summary: string;
   status: 'shipped' | 'scoped';
@@ -128,8 +137,8 @@ export const OPERATING_NOTES = [
     body: 'Bet 2 had to save 10% of onboarding time or it was dead. It saved 0.1%. Deciding that in advance is what stops a bad number becoming an encouraging one.',
   },
   {
-    title: 'Two of the three got killed',
-    body: 'That is the result, not a disappointment. Both were killed on arithmetic, in about a day each, instead of after a quarter of engineering.',
+    title: 'Every no came with a cheaper yes',
+    body: 'Neither of the two I killed ended in "nothing works". Both ended in "not that, this", and the replacement is on the card. Each answer took about a day, instead of a quarter of engineering.',
   },
   {
     title: 'Every number says where it came from',
@@ -141,6 +150,56 @@ export const OPERATING_NOTES = [
   },
 ];
 
+/**
+ * What the first quarter looks like.
+ *
+ * The pages before this one only evaluated. A portfolio that measures three
+ * ideas and stops reads as a consultant's, and the role is not a consultant's.
+ * Every item below is either replacing one of my guesses with a real number, or
+ * building the thing that survived, and each says what it depends on so none of
+ * it reads as a promise.
+ */
+export interface PlanStep {
+  when: string;
+  title: string;
+  body: string;
+  /** What this needs from Quility to be possible at all. */
+  needs: string;
+}
+
+export const FIRST_90_DAYS: PlanStep[] = [
+  {
+    when: 'Weeks 1 to 2',
+    title: 'Replace my three guesses with your three numbers',
+    body: 'Every conclusion on this site rests on timings and rates I invented. Three of them decide everything: how much of onboarding is genuinely waiting, how often a contracting packet bounces and why, and whether declines trace back to a misjudged rate class at quote time. If the real numbers differ from mine, some of these verdicts flip, and I would rather find that out in week two than in month six.',
+    needs: 'Read access to the onboarding workflow system, contracting records, and placement data.',
+  },
+  {
+    when: 'Weeks 3 to 6',
+    title: 'Ship the completeness check. There is no AI in it.',
+    body: 'It was the largest measured lever in the whole exercise, at 22 times what the document reader saves. It is a rule engine over carrier requirements, so it needs no evaluation harness, no model spend, and no monitoring. It either matches the requirement or it does not.',
+    needs: 'Current carrier requirement matrices, and someone in contracting to confirm the rules.',
+  },
+  {
+    when: 'Weeks 7 to 12',
+    title: 'Get 30 calls graded by two sales managers, independently',
+    body: 'This is the blocker on everything in bet 3 and it is the cheapest item on the list. Right now the scoring is graded against an answer key I wrote, which tells you the tool is consistent and tells you nothing about whether it is right. Two managers grading the same 30 calls also tells you how much they disagree with each other, which is the real ceiling on any scoring tool.',
+    needs: 'Thirty recorded calls, and about a day each from two managers.',
+  },
+  {
+    when: 'Also weeks 7 to 12',
+    title: 'Put the underwriting copilot in front of ten agents, behind a reviewer',
+    body: 'It is right nine times in ten with the source on screen, which is a review accelerator rather than an answer. Ten agents and a licensed reviewer for a month produces the only number that matters: whether cases placed with it come back rated or declined less often than cases placed without it.',
+    needs: 'Ten volunteer agents, one reviewer, and permission from the carriers whose guides get indexed.',
+  },
+  {
+    when: 'Standing',
+    title: 'No idea gets a sprint until it has a number that would kill it',
+    body: 'Written down first, in one sentence, with a threshold. It costs an afternoon and it is the only reason two of these three were settled in a day each rather than a quarter each. It also removes the argument later, because the disappointing number cannot be reinterpreted as an encouraging one.',
+    needs: 'Nothing. This is a habit, not a budget line.',
+  },
+];
+
 export const BETS: Bet[] = [
   {
     id: 'underwriting-copilot',
@@ -149,6 +208,8 @@ export const BETS: Bet[] = [
     question: 'Which carrier will actually write this case?',
     answer:
       'Nine times in ten it picks the right rate class, and every claim shows the guideline page it came from. It is not yet reliable enough at saying "I do not know".',
+    recommendation:
+      'Ship it as a tool for a reviewer, not as an answer. Nine in ten right with the source on screen makes a review faster today. Running unattended needs it to admit ignorance far more reliably than it currently does, and that is the one number to fix.',
     summary:
       'Four carriers compared from one plain-language case, every claim traced to its page.',
     status: 'shipped',
@@ -279,6 +340,8 @@ export const BETS: Bet[] = [
     question: 'Onboarding takes 15 days. Could AI make it hours?',
     answer:
       'No. Out of those 15 days, someone is actually working for about 68 minutes. The rest is waiting on carriers, states, and a background check, and no model shortens a queue.',
+    recommendation:
+      'Build the checklist, not the document reader. Catching a bad packet before it reaches a carrier saves 22 times more time than AI reading it, costs nothing to run, and has no AI in it to go wrong.',
     summary:
       'Where 15 days actually go, and how little of it a model can remove.',
     status: 'shipped',
@@ -387,6 +450,8 @@ export const BETS: Bet[] = [
     question: 'Can AI tell a manager why a rep lost the call?',
     answer:
       'It can point at the exact line and explain it. It cannot yet put a trustworthy number on it: I ran the same test twice and the bottom of the leaderboard flipped.',
+    recommendation:
+      'Build the per-call view, drop the leaderboard. Pointing a manager at the exact line in a call works now. Ranking reps against each other does not, and will not until real managers have graded some calls.',
     summary:
       'Does a rubric score selling skill, or knowing how the call ended?',
     status: 'shipped',

@@ -1,4 +1,4 @@
-import { BETS, OPERATING_NOTES, THESIS } from '../content/bets';
+import { BETS, FIRST_90_DAYS, OPERATING_NOTES, THESIS } from '../content/bets';
 import { BetCard } from '../components/BetCard';
 
 /**
@@ -23,12 +23,12 @@ export function PortfolioView() {
       <section className="max-w-3xl">
         <p className="gauge-label text-accent">Innovation Office · Scott Delia</p>
         <h1 className="mt-3 text-display font-extrabold text-ink-strong">
-          Three AI ideas for Quility. I killed two of them.
+          Three AI ideas for Quility. Here is what the numbers said.
         </h1>
         <p className="mt-4 text-lead text-ink-muted">
-          Each one is a working tool you can click, with the arithmetic that
-          decided its fate. The two I killed were killed on numbers I wrote down
-          before I started building, in about a day each.
+          Each is a working tool you can click, with the arithmetic behind it.
+          None came back the way I expected, and each one ended pointing at
+          something cheaper worth building instead. About a day per answer.
         </p>
       </section>
 
@@ -37,7 +37,8 @@ export function PortfolioView() {
           The three questions
         </h2>
         <p className="mt-1.5 text-sm text-ink-muted">
-          {killed} of {BETS.length} came back as no. That is the useful part.
+          {killed} of the {BETS.length} obvious builds did not survive contact
+          with the arithmetic. Each one names its replacement.
         </p>
 
         <div className="mt-5 grid gap-4 lg:grid-cols-3">
@@ -61,7 +62,50 @@ export function PortfolioView() {
         ))}
       </section>
 
-      <section className="mt-12">
+      {/* What happens next, which the page did not say at all. Three measured
+          verdicts and no plan reads as an audit rather than as someone who
+          would run the function. */}
+      <section className="mt-14">
+        <h2 className="text-title font-extrabold text-ink-strong">
+          What I would do in the first 90 days
+        </h2>
+        <p className="mt-1.5 max-w-3xl text-sm text-ink-muted">
+          Everything above rests on numbers I invented. The first job is
+          replacing them with yours, and the second is shipping the one thing
+          that survived. Each step says what it needs from Quility, so none of
+          it is a promise I can make on my own.
+        </p>
+
+        <ol className="mt-6 space-y-px overflow-hidden border border-line">
+          {FIRST_90_DAYS.map((step, index) => (
+            <li
+              key={step.title}
+              className="flex flex-col gap-x-8 gap-y-3 bg-surface p-5 sm:flex-row"
+            >
+              <div className="sm:w-40 sm:shrink-0">
+                <p className="gauge-label text-accent">{step.when}</p>
+                <p className="readout mt-1 text-2xl text-ink-faint">
+                  {String(index + 1).padStart(2, '0')}
+                </p>
+              </div>
+              <div className="min-w-0">
+                <h3 className="text-base font-extrabold text-ink-strong">
+                  {step.title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-muted">
+                  {step.body}
+                </p>
+                <p className="mt-2.5 text-xs leading-relaxed text-ink-subtle">
+                  <span className="gauge-label">Needs</span>{' '}
+                  <span className="ml-1">{step.needs}</span>
+                </p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section className="mt-14">
         <h2 className="text-title font-extrabold text-ink-strong">
           How I decided
         </h2>

@@ -35,12 +35,30 @@ export function BetCard({ bet }: { bet: Bet }) {
         <p className="mt-2 text-sm leading-relaxed text-ink">{bet.answer}</p>
       </div>
 
+      {/* The decision, not the post-mortem. Two of these three ended by
+          redirecting rather than stopping, and a card that reports the death
+          without the replacement reads as a refusal. */}
+      <div
+        className="mx-5 mb-5 border-l-[3px] px-4 py-3.5"
+        style={{
+          borderColor: 'var(--accent)',
+          background: 'var(--accent-soft)',
+        }}
+      >
+        <p className="gauge-label" style={{ color: 'var(--accent)' }}>
+          What I would build
+        </p>
+        <p className="mt-2 text-sm leading-relaxed text-ink">
+          {bet.recommendation}
+        </p>
+      </div>
+
       {/* The number that decided it, not the number that flatters it. */}
       {headline && (
         <div className="mx-5 mb-5 border-t border-line pt-4">
           <p className="gauge-label">{headline.name}</p>
           <p
-            className={`readout mt-2 text-3xl ${
+            className={`readout mt-2 text-2xl ${
               headline.weakest ? 'text-warn' : 'readout-live'
             }`}
           >
@@ -60,7 +78,7 @@ export function BetCard({ bet }: { bet: Bet }) {
           onClick={() => navigate(bet.id)}
           className="group flex items-center gap-2 text-sm font-bold text-accent transition-opacity hover:opacity-80"
         >
-          How I know
+          How I know that
           <span
             aria-hidden
             className="transition-transform group-hover:translate-x-0.5"
