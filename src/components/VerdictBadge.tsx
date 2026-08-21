@@ -17,15 +17,18 @@ import type { Verdict } from '../content/bets';
  * this page went wrong.
  */
 
+// Plain words, not product-management vocabulary. "De-scope" told a reader
+// familiar with the term that most of an idea died and a piece survived. It
+// told everyone else nothing at all.
 const VERDICT_STYLES: Record<
   Verdict,
   { label: string; tier: string; solid?: boolean }
 > = {
-  scale: { label: 'Scale', tier: 'var(--tier-preferred-plus)', solid: true },
-  iterate: { label: 'Iterate', tier: 'var(--tier-standard-plus)', solid: true },
-  de_scope: { label: 'De-scope', tier: 'var(--ink-subtle)' },
-  kill: { label: 'Kill', tier: 'var(--ink-subtle)' },
-  pending: { label: 'Verdict pending', tier: 'var(--ink-faint)' },
+  scale: { label: 'Build it', tier: 'var(--tier-preferred-plus)', solid: true },
+  iterate: { label: 'Not yet', tier: 'var(--tier-standard-plus)', solid: true },
+  de_scope: { label: 'Mostly killed', tier: 'var(--ink-subtle)' },
+  kill: { label: 'Killed', tier: 'var(--ink-subtle)' },
+  pending: { label: 'Undecided', tier: 'var(--ink-faint)' },
 };
 
 export function VerdictBadge({

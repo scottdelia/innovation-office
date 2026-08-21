@@ -5,67 +5,52 @@ import { VerdictBadge } from './VerdictBadge';
 /**
  * One bet, as a card on the portfolio page.
  *
- * The card carries the headline number and the verdict and stops. Everything
- * else, the arithmetic, the failure taxonomy, the full metric set, is a click
- * away on the one-pager. A card that tries to carry the whole case makes three
- * of them unreadable side by side, and the point of the portfolio view is that
- * three bets can be compared at all.
+ * Question, then answer, then the one number that settles it. In that order
+ * because a reader who has never seen this project needs to know what was
+ * being asked before a percentage means anything to them. The earlier version
+ * of this card led with a summary line and two unlabelled figures, and a
+ * stranger could not tell what "0.1%" was 0.1% of.
  *
- * A scoped bet shows its pre-registered kill criterion where a shipped bet shows
- * its headline result. That is the honest parallel: for work that has run, the
- * interesting thing is what it measured; for work that has not, the interesting
- * thing is what would stop it.
+ * Everything else, the arithmetic, the failure list, the full set of numbers,
+ * is a click away. A card that carries the whole case makes three of them
+ * unreadable side by side, and comparing three bets is the point of the page.
  */
 export function BetCard({ bet }: { bet: Bet }) {
-  const headline = bet.metrics?.find((metric) => !metric.weakest);
-  const weakest = bet.metrics?.find((metric) => metric.weakest);
+  const headline = bet.metrics?.find((metric) => metric.weakest) ?? bet.metrics?.[0];
 
   return (
-    <article className="card flex flex-col overflow-hidden transition-colors hover:border-line-strong">
-      <div className="flex items-start justify-between gap-4 border-b border-line px-5 py-4">
-        <div className="min-w-0">
-          <p className="gauge-label">
-            Bet {String(bet.index).padStart(2, '0')}
-          </p>
-          <h3 className="mt-1 text-lg font-semibold tracking-tight text-ink">
-            {bet.title}
-          </h3>
-        </div>
+    <article className="card flex flex-col transition-colors hover:border-line-strong">
+      <div className="flex items-start justify-between gap-3 border-b border-line px-5 py-3">
+        <p className="gauge-label">Bet {String(bet.index).padStart(2, '0')}</p>
         <VerdictBadge verdict={bet.verdict} />
       </div>
 
-      <p className="px-5 py-4 text-sm leading-relaxed text-ink-muted">
-        {bet.summary}
-      </p>
+      <div className="px-5 py-5">
+        <p className="gauge-label">The question</p>
+        <h3 className="mt-2 text-lg leading-snug font-extrabold text-ink-strong">
+          {bet.question}
+        </h3>
 
-      {bet.status === 'shipped' && headline && (
-        <dl className="mx-5 mb-5 grid grid-cols-2 gap-px overflow-hidden rounded border border-line bg-line">
-          <div className="bg-surface-inset px-4 py-3.5">
-            <dt className="gauge-label">{headline.name}</dt>
-            <dd className="readout readout-live mt-2 text-2xl">
-              {headline.value}
-            </dd>
-          </div>
-          {weakest && (
-            <div className="bg-surface-inset px-4 py-3.5">
-              <dt className="gauge-label text-warn">{weakest.name}</dt>
-              <dd className="readout mt-2 text-2xl text-ink-muted">
-                {weakest.value}
-              </dd>
-            </div>
-          )}
-        </dl>
-      )}
+        <p className="gauge-label mt-5">The answer</p>
+        <p className="mt-2 text-sm leading-relaxed text-ink">{bet.answer}</p>
+      </div>
 
-      {bet.status === 'scoped' && bet.killCriterion && (
-        <div
-          className="tier-rail mx-5 mb-4 rounded-r-lg bg-surface-inset py-3 pl-4 pr-3.5"
-          style={{ '--tier': 'var(--tier-table-rated)' } as React.CSSProperties}
-        >
-          <p className="gauge-label">Kill criterion, registered first</p>
-          <p className="mt-1.5 text-xs leading-relaxed text-ink-muted">
-            {bet.killCriterion.split('.')[0]}.
+      {/* The number that decided it, not the number that flatters it. */}
+      {headline && (
+        <div className="mx-5 mb-5 border-t border-line pt-4">
+          <p className="gauge-label">{headline.name}</p>
+          <p
+            className={`readout mt-2 text-3xl ${
+              headline.weakest ? 'text-warn' : 'readout-live'
+            }`}
+          >
+            {headline.value}
           </p>
+          {headline.detail && (
+            <p className="mt-1.5 text-xs leading-relaxed text-ink-subtle">
+              {headline.detail}
+            </p>
+          )}
         </div>
       )}
 
@@ -73,9 +58,9 @@ export function BetCard({ bet }: { bet: Bet }) {
         <button
           type="button"
           onClick={() => navigate(bet.id)}
-          className="group flex items-center gap-2 text-sm font-medium text-accent transition-opacity hover:opacity-80"
+          className="group flex items-center gap-2 text-sm font-bold text-accent transition-opacity hover:opacity-80"
         >
-          {bet.status === 'shipped' ? 'Read the result' : 'Read the scope'}
+          How I know
           <span
             aria-hidden
             className="transition-transform group-hover:translate-x-0.5"
