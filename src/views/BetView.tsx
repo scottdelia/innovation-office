@@ -28,9 +28,7 @@ function Section({
 }) {
   return (
     <section className="mt-10">
-      <h2 className="text-[0.6875rem] font-semibold uppercase tracking-[0.1em] text-ink-faint">
-        {title}
-      </h2>
+      <h2 className="gauge-label">{title}</h2>
       <div className="mt-3">{children}</div>
     </section>
   );
@@ -54,16 +52,19 @@ export function BetView({ bet }: { bet: Bet }) {
       </button>
 
       <header className="mt-6">
-        <p className="tabular text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-ink-faint">
-          Bet {bet.index}
-          <span className="ml-2 font-medium normal-case tracking-normal">
-            {bet.status === 'shipped' ? 'Shipped' : 'Scoped, not built'}
-          </span>
-        </p>
-        <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-2">
-          <h1 className="text-display font-semibold text-ink">{bet.title}</h1>
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+          <p className="gauge-label">
+            Bet {String(bet.index).padStart(2, '0')} · {bet.title}
+          </p>
           <VerdictBadge verdict={bet.verdict} size="lg" />
         </div>
+        {/* The question is the headline. The title is a label above it. A
+            reader arriving from a link has no idea what "Agent Onboarding"
+            was asking until they are told. */}
+        <h1 className="mt-3 text-display font-extrabold text-ink-strong">
+          {bet.question}
+        </h1>
+        <p className="mt-4 text-lead text-ink">{bet.answer}</p>
       </header>
 
       {bet.links && bet.links.length > 0 && (
@@ -76,8 +77,8 @@ export function BetView({ bet }: { bet: Bet }) {
               rel="noreferrer noopener"
               className={
                 link.primary
-                  ? 'rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-accent-ink transition-colors hover:bg-accent-hover'
-                  : 'rounded-lg border border-line bg-surface px-4 py-2 text-sm font-medium text-ink-muted transition-colors hover:border-line-strong hover:text-ink'
+                  ? 'bg-accent px-4 py-2 text-sm font-bold text-accent-ink transition-colors hover:bg-accent-hover'
+                  : 'border border-line bg-surface px-4 py-2 text-sm font-medium text-ink-muted transition-colors hover:border-line-strong hover:text-ink'
               }
             >
               {link.label}
@@ -86,7 +87,7 @@ export function BetView({ bet }: { bet: Bet }) {
         </div>
       )}
 
-      <Section title="The problem">
+      <Section title="Why anyone asked">
         <blockquote
           className="tier-rail py-1 pl-4 text-lead text-ink-muted"
           style={{ '--tier': 'var(--accent)' } as React.CSSProperties}
@@ -98,14 +99,14 @@ export function BetView({ bet }: { bet: Bet }) {
         </p>
       </Section>
 
-      <Section title="The hypothesis">
+      <Section title="What I thought would happen">
         <p className="text-base leading-relaxed text-ink-muted">
           {bet.hypothesis}
         </p>
       </Section>
 
       {bet.built && (
-        <Section title="What was built">
+        <Section title="What I built">
           <ul className="space-y-2.5">
             {bet.built.map((item) => (
               <li key={item} className="flex gap-3">
@@ -124,7 +125,7 @@ export function BetView({ bet }: { bet: Bet }) {
       )}
 
       {bet.metrics && (
-        <Section title="What it measured">
+        <Section title="What the numbers said">
           <div className="card px-5 py-1">
             {bet.metrics.map((metric) => (
               <MetricRow key={metric.name} metric={metric} />
@@ -162,7 +163,7 @@ export function BetView({ bet }: { bet: Bet }) {
       )}
 
       {bet.roi && bet.roi.length > 0 && (
-        <Section title="What it would be worth">
+        <Section title="What it would be worth, if it worked">
           <div className="space-y-4">
             {bet.roi.map((model) => (
               <RoiPanel key={model.lever} model={model} />
@@ -172,7 +173,7 @@ export function BetView({ bet }: { bet: Bet }) {
       )}
 
       {bet.killCriterion && (
-        <Section title="Kill criterion, registered before building">
+        <Section title="What I said would kill it, before I built it">
           <div
             className="tier-rail card py-4 pl-5 pr-5"
             style={
@@ -186,7 +187,7 @@ export function BetView({ bet }: { bet: Bet }) {
         </Section>
       )}
 
-      <Section title="The verdict">
+      <Section title="So: build it or not?">
         <div className="card p-5">
           <div className="flex flex-wrap items-center gap-3">
             <VerdictBadge verdict={bet.verdict} size="lg" />
@@ -195,9 +196,7 @@ export function BetView({ bet }: { bet: Bet }) {
             {bet.verdictRationale}
           </p>
           <div className="mt-4 border-t border-line pt-4">
-            <p className="text-[0.6875rem] font-semibold uppercase tracking-[0.06em] text-ink-faint">
-              What would change it
-            </p>
+            <p className="gauge-label">What would change my mind</p>
             <p className="mt-1.5 text-sm leading-relaxed text-ink-muted">
               {bet.wouldChangeIt}
             </p>
