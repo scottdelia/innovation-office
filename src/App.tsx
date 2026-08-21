@@ -16,13 +16,12 @@ import { BetView } from './views/BetView';
 function Mark() {
   return (
     <svg viewBox="0 0 32 32" aria-hidden className="size-8 shrink-0">
-      <rect width="32" height="32" rx="8" fill="var(--ink)" />
+      <rect width="32" height="32" fill="var(--accent-bright)" />
       <rect
         x="7"
         y="8"
         width="18"
         height="3.5"
-        rx="1.75"
         fill="var(--tier-preferred-plus)"
       />
       <rect
@@ -30,7 +29,6 @@ function Mark() {
         y="14"
         width="13"
         height="3.5"
-        rx="1.75"
         fill="var(--tier-standard-plus)"
       />
       <rect
@@ -38,7 +36,6 @@ function Mark() {
         y="20"
         width="15"
         height="3.5"
-        rx="1.75"
         fill="var(--tier-table-rated)"
       />
     </svg>
@@ -51,7 +48,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-surface-sunken">
-      <header className="border-b border-line bg-surface">
+      <header className="bg-surface-brand">
         <div className="mx-auto flex max-w-[72rem] items-center justify-between gap-4 px-5 py-3">
           <button
             type="button"
@@ -60,10 +57,10 @@ export default function App() {
           >
             <Mark />
             <span className="min-w-0">
-              <span className="block truncate text-sm font-semibold tracking-tight text-ink">
+              <span className="block truncate text-sm font-extrabold tracking-tight text-white">
                 Innovation Office
               </span>
-              <span className="block truncate text-xs text-ink-subtle">
+              <span className="block truncate text-xs text-white/70">
                 Applied AI portfolio · Scott Delia
               </span>
             </span>
