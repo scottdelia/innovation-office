@@ -65,6 +65,18 @@ export function BetView({ bet }: { bet: Bet }) {
           {bet.question}
         </h1>
         <p className="mt-4 text-lead text-ink">{bet.answer}</p>
+
+        <div
+          className="mt-6 border-l-[3px] px-5 py-4"
+          style={{ borderColor: 'var(--accent)', background: 'var(--accent-soft)' }}
+        >
+          <p className="gauge-label" style={{ color: 'var(--accent)' }}>
+            So what I would build
+          </p>
+          <p className="mt-2 text-base leading-relaxed text-ink">
+            {bet.recommendation}
+          </p>
+        </div>
       </header>
 
       {bet.links && bet.links.length > 0 && (
