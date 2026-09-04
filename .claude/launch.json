@@ -29,7 +29,7 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": [
         "--prefix",
-        "C:/_Development/quility_poc/frontend",
+        "C:/_Development/underwriting-copilot/frontend",
         "run",
         "dev",
         "--",
