@@ -1,4 +1,4 @@
-import { BETS, FIRST_90_DAYS, OPERATING_NOTES, THESIS } from '../content/bets';
+import { BETS, BUILD_ORDER, OPERATING_NOTES, THESIS } from '../content/bets';
 import { BetCard } from '../components/BetCard';
 
 /**
@@ -23,7 +23,8 @@ export function PortfolioView() {
       <section className="max-w-3xl">
         <p className="gauge-label text-accent">Innovation Office · Scott Delia</p>
         <h1 className="mt-3 text-display font-extrabold text-ink-strong">
-          Three AI ideas for Quility. Here is what the numbers said.
+          Three AI ideas for a life insurance brokerage. Here is what the
+          numbers said.
         </h1>
         <p className="mt-4 text-lead text-ink-muted">
           Each is a working tool you can click, with the arithmetic behind it.
@@ -64,20 +65,20 @@ export function PortfolioView() {
 
       {/* What happens next, which the page did not say at all. Three measured
           verdicts and no plan reads as an audit rather than as someone who
-          would run the function. */}
+          would go on to build the thing that survived. */}
       <section className="mt-14">
         <h2 className="text-title font-extrabold text-ink-strong">
-          What I would do in the first 90 days
+          What I would build next, and in what order
         </h2>
         <p className="mt-1.5 max-w-3xl text-sm text-ink-muted">
           Everything above rests on numbers I invented. The first job is
-          replacing them with yours, and the second is shipping the one thing
-          that survived. Each step says what it needs from Quility, so none of
-          it is a promise I can make on my own.
+          replacing them with measured ones, and the second is shipping the one
+          thing that survived. Each step says what it depends on, so none of it
+          is a promise I could keep on my own.
         </p>
 
         <ol className="mt-6 space-y-px overflow-hidden border border-line">
-          {FIRST_90_DAYS.map((step, index) => (
+          {BUILD_ORDER.map((step, index) => (
             <li
               key={step.title}
               className="flex flex-col gap-x-8 gap-y-3 bg-surface p-5 sm:flex-row"

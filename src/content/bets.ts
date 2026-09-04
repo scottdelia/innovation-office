@@ -151,23 +151,23 @@ export const OPERATING_NOTES = [
 ];
 
 /**
- * What the first quarter looks like.
+ * What comes after the three verdicts.
  *
  * The pages before this one only evaluated. A portfolio that measures three
- * ideas and stops reads as a consultant's, and the role is not a consultant's.
- * Every item below is either replacing one of my guesses with a real number, or
- * building the thing that survived, and each says what it depends on so none of
- * it reads as a promise.
+ * ideas and stops reads as an audit rather than as someone who would build
+ * what survived. Every item below is either replacing one of my guesses with a
+ * real number, or building the thing that survived, and each says what it
+ * depends on so none of it reads as a promise.
  */
 export interface PlanStep {
   when: string;
   title: string;
   body: string;
-  /** What this needs from Quility to be possible at all. */
+  /** What this needs from the operator to be possible at all. */
   needs: string;
 }
 
-export const FIRST_90_DAYS: PlanStep[] = [
+export const BUILD_ORDER: PlanStep[] = [
   {
     when: 'Weeks 1 to 2',
     title: 'Replace my three guesses with your three numbers',
@@ -280,7 +280,7 @@ export const BETS: Bet[] = [
             name: 'Producing agents',
             value: 'Your number',
             basis: 'guess',
-            note: 'Quility publishes "thousands". The model needs the producing count, not the licensed count.',
+            note: 'A brokerage this size publishes "thousands". The model needs the producing count, not the licensed count.',
           },
           {
             name: 'Share declined for a misjudged class',
@@ -347,7 +347,7 @@ export const BETS: Bet[] = [
     status: 'shipped',
     problem:
       'An agent onboarding workflow that takes days and involves too many manual handoffs. What if it took hours?',
-    problemAttribution: 'Named in the role brief',
+    problemAttribution: 'The gap this bet was built against',
     hypothesis:
       'The obvious build is an AI that reads the licensing paperwork. I thought that build was close to worthless, and that proving it was the interesting version of this bet. The delay is waiting, not reading.',
     built: [
@@ -417,7 +417,7 @@ export const BETS: Bet[] = [
             name: 'Days lost per bounce',
             value: '7.4',
             basis: 'industry_assumption',
-            note: 'Modelled from published carrier turnaround times, not observed at Quility.',
+            note: 'Modelled from published carrier turnaround times, not observed in production.',
           },
         ],
         caveat:
@@ -457,7 +457,7 @@ export const BETS: Bet[] = [
     status: 'shipped',
     problem:
       'Agents close some calls and lose others for reasons nobody writes down. What if AI could find the pattern and turn it into coaching?',
-    problemAttribution: 'Named in the role brief',
+    problemAttribution: 'The gap this bet was built against',
     hypothesis:
       'An AI can obviously put a score on a call. The thing worth testing is whether the score reflects how the rep sold, or just reflects knowing the call closed. A scorer that is secretly doing the second looks exactly like one doing the first.',
     killCriterion:
